@@ -2,15 +2,17 @@
 
 namespace GildedRose;
 
-final class GildedRose {
-
+final class GildedRose
+{
     private $items = [];
 
-    public function __construct($items) {
+    public function __construct($items)
+    {
         $this->items = $items;
     }
 
-    public function updateQuality() {
+    public function updateQuality()
+    {
         foreach ($this->items as $item) {
             if ($item->name != 'Aged Brie' and $item->name != 'Backstage passes to a TAFKAL80ETC concert') {
                 if ($item->quality > 0) {
