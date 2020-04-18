@@ -38,8 +38,8 @@ class GildedRoseTest extends TestCase
 
         $items = [];
         foreach ($itemNames as $itemName) {
-            for ($sellIn = 0; $sellIn < 100; $sellIn++) {
-                for ($quality = 0; $quality < 100; $quality++) {
+            foreach ([0, 1, 5, 6, 11] as $sellIn) {
+                foreach ([0, 49, 50] as $quality) {
                     $items[] = new Item($itemName, $sellIn, $quality);
                 }
             }
