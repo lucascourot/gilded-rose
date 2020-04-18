@@ -22,5 +22,10 @@ docker-php: ## Open bash in the php image
 run: ## Run Gilded Rose example app
 	docker-compose exec php php bin/app.php run
 
-test: ## Run tests with coverage
+test: test-unit test-mutation ## Run all tests
+
+test-unit: ## Run unit tests with coverage
 	docker-compose exec php php vendor/bin/phpunit --testdox --coverage-text
+
+test-mutation: ## Run mutation tests
+	docker-compose exec php php vendor/bin/infection --threads=8
