@@ -16,6 +16,7 @@
     <filter>
         <whitelist>
             <directory>src</directory>
+            <file>tests/GildedRoseGoldenMaster.php</file>
         </whitelist>
     </filter>
 </phpunit>

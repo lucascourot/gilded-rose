@@ -8,15 +8,41 @@ use PHPUnit\Framework\TestCase;
 
 class GildedRoseTest extends TestCase
 {
-    public function testGildedRose()
+    public function testGildedRoseAgainstGoldenMaster()
     {
-        $agedBrie = new Item('Aged Brie', 1, 1);
-        $gildedRose = new GildedRose([$agedBrie]);
+        // Given
+        $items = $this->generateSampleOfItems();
+        $itemsGoldenMaster = array_map(fn(Item $item) => clone $item, $items);
 
-        $gildedRose->updateQuality();
+        // When
+        (new GildedRose($items))->updateQuality();
+        (new GildedRoseGoldenMaster($itemsGoldenMaster))->updateQuality();
 
-        $this->assertSame('Aged Brie', $agedBrie->name);
-        $this->assertSame(0, $agedBrie->sell_in);
-        $this->assertSame(2, $agedBrie->quality);
+        // Then
+        foreach ($items as $key => $item) {
+            $this->assertSame((string) $itemsGoldenMaster[$key], (string) $item);
+        }
+    }
+
+    /**
+     * @return Item[]
+     */
+    private function generateSampleOfItems(): array
+    {
+        $itemNames = [
+            'Standard',
+            'Aged Brie',
+            'Backstage passes to a TAFKAL80ETC concert',
+            'Sulfuras, Hand of Ragnaros',
+        ];
+
+        $items = [];
+        foreach ($itemNames as $itemName) {
+            for ($sellIn = 0; $sellIn < 100; $sellIn++) {
+                $items[] = new Item($itemName, $sellIn, 30);
+            }
+        }
+
+        return $items;
     }
 }
