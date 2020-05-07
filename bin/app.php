@@ -1,9 +1,11 @@
 <?php
 
-require dirname(__DIR__).'/vendor/autoload.php';
+declare(strict_types=1);
 
-use GildedRose\Item;
+require dirname(__DIR__) . '/vendor/autoload.php';
+
 use GildedRose\GildedRose;
+use GildedRose\Item;
 use Symfony\Component\Console\Output\OutputInterface;
 
 $items = [
@@ -13,11 +15,10 @@ $items = [
 ];
 
 $app = new Silly\Application();
-$app->command('run', function (OutputInterface $output) use ($items) {
+$app->command('run', static function (OutputInterface $output) use ($items) : void {
     $gildedRose = new GildedRose($items);
     $gildedRose->updateQuality();
 
-    /** @var Item[] $items */
     foreach ($items as $item) {
         $output->writeln('-> ' . (string) $item);
     }

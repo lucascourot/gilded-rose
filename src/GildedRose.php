@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GildedRose;
 
 use GildedRose\KnownItems\AgedBrie;
@@ -15,6 +17,9 @@ final class GildedRose
     /** @var array<string, KnownItem> $knownItems QualityCalculator indexed by itemName */
     private array $knownItems = [];
 
+    /**
+     * @param array<Item> $itemsToUpdate
+     */
     public function __construct(array $itemsToUpdate)
     {
         $this->itemsToUpdate = $itemsToUpdate;
@@ -26,7 +31,7 @@ final class GildedRose
         ];
     }
 
-    public function updateQuality(): void
+    public function updateQuality() : void
     {
         foreach ($this->itemsToUpdate as $itemToUpdate) {
             $this->findQualityCalculatorForItem($itemToUpdate->name)->updateQuality($itemToUpdate);

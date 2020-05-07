@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GildedRose\KnownItems;
 
 use GildedRose\Item;
@@ -24,8 +26,10 @@ final class AgedBrie implements KnownItem
 
         $item->quality++;
 
-        if ($item->sell_in < 0 && $item->quality < self::MAX_QUALITY) {
-            $item->quality++;
+        if ($item->sell_in >= 0 || $item->quality >= self::MAX_QUALITY) {
+            return;
         }
+
+        $item->quality++;
     }
 }

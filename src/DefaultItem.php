@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GildedRose;
 
 final class DefaultItem implements QualityCalculator
@@ -8,12 +10,16 @@ final class DefaultItem implements QualityCalculator
     {
         $item->sell_in--;
 
-        if ($item->quality <= 0) return;
+        if ($item->quality <= 0) {
+            return;
+        }
 
         $item->quality--;
 
-        if ($item->sell_in < 0 && $item->quality > 0) {
-            $item->quality--;
+        if ($item->sell_in >= 0 || $item->quality <= 0) {
+            return;
         }
+
+        $item->quality--;
     }
 }

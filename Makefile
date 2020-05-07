@@ -29,3 +29,12 @@ test-unit: ## Run unit tests with coverage
 
 test-mutation: ## Run mutation tests
 	docker-compose exec php php vendor/bin/infection --threads=8
+
+# Coding Style
+
+.PHONY: cs cs-fix
+cs: vendor ## Check code style
+	docker-compose exec php php vendor/bin/phpcs --ignore=tests/GildedRoseGoldenMaster.php,src/Item.php
+
+cs-fix: vendor ## Fix code style
+	docker-compose exec php php vendor/bin/phpcbf

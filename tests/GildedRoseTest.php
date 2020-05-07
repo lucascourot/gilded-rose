@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GildedRoseTest;
 
 use GildedRose\GildedRose;
@@ -9,14 +11,17 @@ use GildedRose\KnownItems\BackstagePasses;
 use GildedRose\KnownItems\Conjured;
 use GildedRose\KnownItems\Sulfuras;
 use PHPUnit\Framework\TestCase;
+use function array_map;
+use function max;
+use function range;
 
 class GildedRoseTest extends TestCase
 {
-    public function testGildedRoseAgainstGoldenMaster()
+    public function testGildedRoseAgainstGoldenMaster() : void
     {
         // Given
         $items = $this->generateSampleOfItemsForGoldenMaster();
-        $itemsGoldenMaster = array_map(fn(Item $item) => clone $item, $items);
+        $itemsGoldenMaster = array_map(static fn(Item $item) => clone $item, $items);
 
         // When
         (new GildedRose($items))->updateQuality();
@@ -31,7 +36,7 @@ class GildedRoseTest extends TestCase
     /**
      * @return Item[]
      */
-    private function generateSampleOfItemsForGoldenMaster(): array
+    private function generateSampleOfItemsForGoldenMaster() : array
     {
         $itemNames = [
             'Standard',
@@ -52,7 +57,7 @@ class GildedRoseTest extends TestCase
         return $items;
     }
 
-    public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0()
+    public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
     {
         foreach ($this->sellInRange() as $sellIn) {
             foreach ($this->qualityRange() as $quality) {
@@ -64,7 +69,7 @@ class GildedRoseTest extends TestCase
                 (new GildedRose([$normalItem, $conjuredItem]))->updateQuality();
 
                 // Then
-                $this->assertSame( $conjuredItem->sell_in, $normalItem->sell_in);
+                $this->assertSame($conjuredItem->sell_in, $normalItem->sell_in);
                 $this->assertSame($sellIn - 1, $conjuredItem->sell_in);
 
                 $normalDegradation = $quality - $normalItem->quality;
@@ -78,12 +83,18 @@ class GildedRoseTest extends TestCase
         }
     }
 
-    private function sellInRange(): array
+    /**
+     * @return array<int>
+     */
+    private function sellInRange() : array
     {
-        return range(-5, 30);;
+        return range(-5, 30);
     }
 
-    private function qualityRange(): array
+    /**
+     * @return array<int>
+     */
+    private function qualityRange() : array
     {
         return range(0, 50);
     }
