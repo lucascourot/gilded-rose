@@ -96,6 +96,6 @@ class GildedRoseTest extends TestCase
      */
     private function qualityRange() : array
     {
-        return range(0, 50);
+        return range(0, 80);
     }
 }

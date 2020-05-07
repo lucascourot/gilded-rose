@@ -22,7 +22,7 @@ docker-php: ## Open bash in the php image
 run: ## Run Gilded Rose example app
 	docker-compose exec php php bin/app.php run
 
-test: test-unit test-mutation ## Run all tests
+test: cs phpstan test-unit test-mutation ## Run all tests
 
 test-unit: ## Run unit tests with coverage
 	docker-compose exec php php vendor/bin/phpunit --testdox --coverage-text
@@ -38,3 +38,9 @@ cs: vendor ## Check code style
 
 cs-fix: vendor ## Fix code style
 	docker-compose exec php php vendor/bin/phpcbf
+
+# Static Analysis
+
+.PHONY: phpstan
+phpstan: vendor ## Check static analysis
+	docker-compose exec php php vendor/bin/phpstan analyse src tests --level=max
