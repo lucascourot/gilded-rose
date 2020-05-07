@@ -4,6 +4,7 @@ namespace GildedRose;
 
 use GildedRose\KnownItems\AgedBrie;
 use GildedRose\KnownItems\BackstagePasses;
+use GildedRose\KnownItems\Conjured;
 use GildedRose\KnownItems\Sulfuras;
 
 final class GildedRose
@@ -21,6 +22,7 @@ final class GildedRose
             AgedBrie::name() => new AgedBrie(),
             BackstagePasses::name() => new BackstagePasses(),
             Sulfuras::name() => new Sulfuras(),
+            Conjured::name() => new Conjured(),
         ];
     }
 

@@ -8,11 +8,11 @@ final class DefaultItem implements QualityCalculator
     {
         $item->sell_in--;
 
-        if ($item->quality === 0) return;
+        if ($item->quality <= 0) return;
 
         $item->quality--;
 
-        if ($item->sell_in < 0) {
+        if ($item->sell_in < 0 && $item->quality > 0) {
             $item->quality--;
         }
     }
