@@ -32,6 +32,35 @@ class GildedRoseTest extends TestCase
         $this->assertSame($quality - $normalItemQualityDecreasedBy * 2, $normalItemSellByDateHasPassed->quality);
     }
 
+    public function testTheQualityOfAnItemIsNeverNegative() : void
+    {
+        // Given
+        $quality = 0;
+        $itemNames = [
+            'Normal',
+            AgedBrie::name(),
+            BackstagePasses::name(),
+            Sulfuras::name(),
+            Conjured::name(),
+        ];
+
+        /** @var Item[] $items */
+        $items = [];
+        foreach ($itemNames as $itemName) {
+            foreach ($this->sellInRange() as $sellIn) {
+                $items[] = new Item($itemName, $sellIn, $quality);
+            }
+        }
+
+        // When
+        (new GildedRose($items))->updateQuality();
+
+        // Then
+        foreach ($items as $item) {
+            $this->assertGreaterThanOrEqual(0, $item->quality);
+        }
+    }
+
     public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
     {
         foreach ($this->sellInRange() as $sellIn) {
