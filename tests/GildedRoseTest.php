@@ -17,10 +17,52 @@ use function range;
 
 class GildedRoseTest extends TestCase
 {
+    public function testOnceTheSellByDateHasPassedForNormalItemQualityDegradesTwiceAsFast() : void
+    {
+        // Given
+        $quality = 5;
+        $normalItem = new Item('Normal', 1, $quality);
+        $normalItemSellByDateHasPassed = new Item('Normal', 0, $quality);
+
+        // When
+        (new GildedRose([$normalItem, $normalItemSellByDateHasPassed]))->updateQuality();
+
+        // Then
+        $normalItemQualityDecreasedBy = $quality - $normalItem->quality;
+        $this->assertSame($quality - $normalItemQualityDecreasedBy * 2, $normalItemSellByDateHasPassed->quality);
+    }
+
+    public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
+    {
+        foreach ($this->sellInRange() as $sellIn) {
+            foreach ($this->qualityRange() as $quality) {
+                // Given
+                $conjuredItem = new Item(Conjured::name(), $sellIn, $quality);
+                $normalItem = new Item('Normal', $sellIn, $quality);
+
+                // When
+                (new GildedRose([$normalItem, $conjuredItem]))->updateQuality();
+
+                // Then
+                $this->assertSame($conjuredItem->sell_in, $normalItem->sell_in);
+                $this->assertSame($sellIn - 1, $conjuredItem->sell_in);
+
+                $normalDegradation = $quality - $normalItem->quality;
+                $conjuredExpectedDegradation = max($quality - $normalDegradation * 2, 0);
+                $this->assertSame(
+                    $conjuredExpectedDegradation,
+                    $conjuredItem->quality,
+                    'for quality ' . $quality
+                );
+            }
+        }
+    }
+
     public function testGildedRoseAgainstGoldenMaster() : void
     {
         // Given
         $items = $this->generateSampleOfItemsForGoldenMaster();
+
         $itemsGoldenMaster = array_map(static fn(Item $item) => clone $item, $items);
 
         // When
@@ -55,32 +97,6 @@ class GildedRoseTest extends TestCase
         }
 
         return $items;
-    }
-
-    public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
-    {
-        foreach ($this->sellInRange() as $sellIn) {
-            foreach ($this->qualityRange() as $quality) {
-                // Given
-                $conjuredItem = new Item(Conjured::name(), $sellIn, $quality);
-                $normalItem = new Item('Normal', $sellIn, $quality);
-
-                // When
-                (new GildedRose([$normalItem, $conjuredItem]))->updateQuality();
-
-                // Then
-                $this->assertSame($conjuredItem->sell_in, $normalItem->sell_in);
-                $this->assertSame($sellIn - 1, $conjuredItem->sell_in);
-
-                $normalDegradation = $quality - $normalItem->quality;
-                $conjuredExpectedDegradation = max($quality - $normalDegradation * 2, 0);
-                $this->assertSame(
-                    $conjuredExpectedDegradation,
-                    $conjuredItem->quality,
-                    'for quality ' . $quality
-                );
-            }
-        }
     }
 
     /**
