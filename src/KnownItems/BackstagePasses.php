@@ -9,8 +9,6 @@ use GildedRose\KnownItem;
 
 final class BackstagePasses implements KnownItem
 {
-    private const MAX_QUALITY = 50;
-
     public static function name() : string
     {
         return 'Backstage passes to a TAFKAL80ETC concert';
@@ -20,7 +18,7 @@ final class BackstagePasses implements KnownItem
     {
         $item->sell_in--;
 
-        if ($item->quality >= self::MAX_QUALITY && $item->sell_in >= 0) {
+        if ($item->quality >= KnownItem::MAX_ITEM_QUALITY && $item->sell_in >= 0) {
             return;
         }
 
@@ -32,11 +30,11 @@ final class BackstagePasses implements KnownItem
 
         $item->quality++;
 
-        if ($item->sell_in < 10 && $item->quality < self::MAX_QUALITY) {
+        if ($item->sell_in < 10 && $item->quality < KnownItem::MAX_ITEM_QUALITY) {
             $item->quality++;
         }
 
-        if ($item->sell_in >= 5 || $item->quality >= self::MAX_QUALITY) {
+        if ($item->sell_in >= 5 || $item->quality >= KnownItem::MAX_ITEM_QUALITY) {
             return;
         }
 

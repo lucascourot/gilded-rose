@@ -9,8 +9,6 @@ use GildedRose\KnownItem;
 
 final class AgedBrie implements KnownItem
 {
-    private const MAX_QUALITY = 50;
-
     public static function name() : string
     {
         return 'Aged Brie';
@@ -20,13 +18,13 @@ final class AgedBrie implements KnownItem
     {
         $item->sell_in--;
 
-        if ($item->quality >= self::MAX_QUALITY) {
+        if ($item->quality >= KnownItem::MAX_ITEM_QUALITY) {
             return;
         }
 
         $item->quality++;
 
-        if ($item->sell_in >= 0 || $item->quality >= self::MAX_QUALITY) {
+        if ($item->sell_in >= 0 || $item->quality >= KnownItem::MAX_ITEM_QUALITY) {
             return;
         }
 

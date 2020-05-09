@@ -6,6 +6,7 @@ namespace GildedRoseTest;
 
 use GildedRose\GildedRose;
 use GildedRose\Item;
+use GildedRose\KnownItem;
 use GildedRose\KnownItems\AgedBrie;
 use GildedRose\KnownItems\BackstagePasses;
 use GildedRose\KnownItems\Conjured;
@@ -98,14 +99,14 @@ class GildedRoseTest extends TestCase
 
         // Then
         $this->assertSame(12, $agedBrie->quality);
-        $this->assertSame(50, $maxQualityAgedBrie->quality);
+        $this->assertSame(KnownItem::MAX_ITEM_QUALITY, $maxQualityAgedBrie->quality);
         $this->assertSame(13, $agedBrieSellIn1->quality);
     }
 
     public function testQualityOfItemIsNeverMoreThan50() : void
     {
         // Given
-        $maxQuality = 50;
+        $maxQuality = KnownItem::MAX_ITEM_QUALITY;
 
         /** @var Item[] $items */
         $items = [];
@@ -162,7 +163,7 @@ class GildedRoseTest extends TestCase
         // Then
         $this->assertSame(22, $backstagePasses6->quality);
         $this->assertSame(22, $backstagePasses10->quality);
-        $this->assertSame(50, $backstagePassesMaxQuality->quality);
+        $this->assertSame(KnownItem::MAX_ITEM_QUALITY, $backstagePassesMaxQuality->quality);
     }
 
     public function testBackstagePassesIncreaseBy3WhenThereAre5daysOrLess() : void
@@ -178,7 +179,7 @@ class GildedRoseTest extends TestCase
         // Then
         $this->assertSame(23, $backstagePasses1->quality);
         $this->assertSame(23, $backstagePasses5->quality);
-        $this->assertSame(50, $backstagePassesMaxQuality->quality);
+        $this->assertSame(KnownItem::MAX_ITEM_QUALITY, $backstagePassesMaxQuality->quality);
     }
 
     public function testQualityDropsTo0AfterTheConcert() : void
@@ -253,6 +254,6 @@ class GildedRoseTest extends TestCase
      */
     private function qualityRange() : array
     {
-        return range(0, 50);
+        return range(0, KnownItem::MAX_ITEM_QUALITY);
     }
 }
