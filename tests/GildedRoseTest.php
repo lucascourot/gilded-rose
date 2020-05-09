@@ -160,7 +160,7 @@ class GildedRoseTest extends TestCase
     public function testBackstagePassesIncreaseInQualityOverTime() : void
     {
         // Given
-        $backstagePasses  = new Item(BackstagePasses::name(), 17, 20);
+        $backstagePasses = new Item(BackstagePasses::name(), 11, 20);
 
         // When
         (new GildedRose([$backstagePasses]))->updateQuality();
@@ -172,29 +172,45 @@ class GildedRoseTest extends TestCase
     public function testBackstagePassesIncreaseBy2WhenThereAre10daysOrLess() : void
     {
         // Given
-        $backstagePasses9  = new Item(BackstagePasses::name(), 9, 20);
-        $backstagePasses10  = new Item(BackstagePasses::name(), 10, 20);
+        $backstagePasses6 = new Item(BackstagePasses::name(), 6, 20);
+        $backstagePasses10 = new Item(BackstagePasses::name(), 10, 20);
+        $backstagePassesMaxQuality = new Item(BackstagePasses::name(), 10, 49);
 
         // When
-        (new GildedRose([$backstagePasses9, $backstagePasses10]))->updateQuality();
+        (new GildedRose([$backstagePasses6, $backstagePasses10, $backstagePassesMaxQuality]))->updateQuality();
 
         // Then
-        $this->assertSame(22, $backstagePasses9->quality);
+        $this->assertSame(22, $backstagePasses6->quality);
         $this->assertSame(22, $backstagePasses10->quality);
+        $this->assertSame(50, $backstagePassesMaxQuality->quality);
     }
 
     public function testBackstagePassesIncreaseBy3WhenThereAre5daysOrLess() : void
     {
         // Given
-        $backstagePasses4  = new Item(BackstagePasses::name(), 4, 20);
-        $backstagePasses5  = new Item(BackstagePasses::name(), 5, 20);
+        $backstagePasses1 = new Item(BackstagePasses::name(), 1, 20);
+        $backstagePasses5 = new Item(BackstagePasses::name(), 5, 20);
+        $backstagePassesMaxQuality = new Item(BackstagePasses::name(), 5, 48);
 
         // When
-        (new GildedRose([$backstagePasses4, $backstagePasses5]))->updateQuality();
+        (new GildedRose([$backstagePasses1, $backstagePasses5, $backstagePassesMaxQuality]))->updateQuality();
 
         // Then
-        $this->assertSame(23, $backstagePasses4->quality);
+        $this->assertSame(23, $backstagePasses1->quality);
         $this->assertSame(23, $backstagePasses5->quality);
+        $this->assertSame(50, $backstagePassesMaxQuality->quality);
+    }
+
+    public function testQualityDropsTo0AfterTheConcert() : void
+    {
+        // Given
+        $backstagePasses = new Item(BackstagePasses::name(), 0, 30);
+
+        // When
+        (new GildedRose([$backstagePasses]))->updateQuality();
+
+        // Then
+        $this->assertSame(0, $backstagePasses->quality);
     }
 
     public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
