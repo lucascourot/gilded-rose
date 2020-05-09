@@ -61,6 +61,18 @@ class GildedRoseTest extends TestCase
         }
     }
 
+    public function testAgedBrieIncreasesInQualityOverTime() : void
+    {
+        // Given
+        $agedBrie = new Item(AgedBrie::name(), 5, 10);
+
+        // When
+        (new GildedRose([$agedBrie]))->updateQuality();
+
+        // Then
+        $this->assertSame(11, $agedBrie->quality);
+    }
+
     public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
     {
         foreach ($this->sellInRange() as $sellIn) {
