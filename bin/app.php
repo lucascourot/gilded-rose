@@ -15,7 +15,7 @@ $items = [
 ];
 
 $app = new Silly\Application();
-$app->command('run', static function (OutputInterface $output) use ($items) : void {
+$app->command('run', function (OutputInterface $output) use ($items) : void {
     $gildedRose = new GildedRose($items);
     $gildedRose->updateQuality();
 

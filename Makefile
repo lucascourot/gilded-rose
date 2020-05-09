@@ -34,7 +34,7 @@ test-mutation: ## Run mutation tests
 
 .PHONY: cs cs-fix
 cs: vendor ## Check code style
-	docker-compose exec php php vendor/bin/phpcs --ignore=tests/GildedRoseGoldenMaster.php,src/Item.php
+	docker-compose exec php php vendor/bin/phpcs --ignore=tests/GildedRoseGoldenMaster.php,src/Item.php,bin/app.php
 
 cs-fix: vendor ## Fix code style
 	docker-compose exec php php vendor/bin/phpcbf
