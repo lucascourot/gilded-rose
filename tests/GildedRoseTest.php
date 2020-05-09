@@ -11,6 +11,7 @@ use GildedRose\KnownItems\BackstagePasses;
 use GildedRose\KnownItems\Conjured;
 use GildedRose\KnownItems\Sulfuras;
 use PHPUnit\Framework\TestCase;
+use function array_diff;
 use function max;
 use function range;
 
@@ -19,16 +20,11 @@ class GildedRoseTest extends TestCase
     public function testAllItemsExceptSulfurasDecreaseTheirSellIn() : void
     {
         // Given
-        $itemNames = [
-            'Normal',
-            AgedBrie::name(),
-            BackstagePasses::name(),
-            Conjured::name(),
-        ];
+        $allItemNamesExceptSulfuras = array_diff($this->allItems(), [Sulfuras::name()]);
 
         /** @var Item[] $items */
         $items = [];
-        foreach ($itemNames as $itemName) {
+        foreach ($allItemNamesExceptSulfuras as $itemName) {
             $items[] = new Item($itemName, 5, 10);
         }
 
@@ -59,17 +55,9 @@ class GildedRoseTest extends TestCase
     public function testTheQualityOfAnItemIsNeverNegative() : void
     {
         // Given
-        $itemNames = [
-            'Normal',
-            AgedBrie::name(),
-            BackstagePasses::name(),
-            Sulfuras::name(),
-            Conjured::name(),
-        ];
-
         /** @var Item[] $items */
         $items = [];
-        foreach ($itemNames as $itemName) {
+        foreach ($this->allItems() as $itemName) {
             foreach ($this->sellInRange() as $sellIn) {
                 foreach ([0, 1, 2, 3] as $quality) {
                     $items[] = new Item($itemName, $sellIn, $quality);
@@ -118,17 +106,10 @@ class GildedRoseTest extends TestCase
     {
         // Given
         $maxQuality = 50;
-        $itemNames = [
-            'Normal',
-            AgedBrie::name(),
-            BackstagePasses::name(),
-            Sulfuras::name(),
-            Conjured::name(),
-        ];
 
         /** @var Item[] $items */
         $items = [];
-        foreach ($itemNames as $itemName) {
+        foreach ($this->allItems() as $itemName) {
             foreach ($this->sellInRange() as $sellIn) {
                 $items[] = new Item($itemName, $sellIn, $maxQuality);
             }
@@ -243,6 +224,20 @@ class GildedRoseTest extends TestCase
         $item = new Item('Normal', 5, 10);
 
         $this->assertSame('Normal, 5, 10', (string) $item);
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function allItems() : array
+    {
+        return [
+            'Normal',
+            AgedBrie::name(),
+            BackstagePasses::name(),
+            Sulfuras::name(),
+            Conjured::name(),
+        ];
     }
 
     /**
