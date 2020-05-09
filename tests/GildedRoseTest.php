@@ -115,6 +115,46 @@ class GildedRoseTest extends TestCase
         $this->assertSame(15, $sulfurasItem->quality);
     }
 
+    public function testBackstagePassesIncreaseInQualityOverTime() : void
+    {
+        // Given
+        $backstagePasses  = new Item(BackstagePasses::name(), 17, 20);
+
+        // When
+        (new GildedRose([$backstagePasses]))->updateQuality();
+
+        // Then
+        $this->assertSame(21, $backstagePasses->quality);
+    }
+
+    public function testBackstagePassesIncreaseBy2WhenThereAre10daysOrLess() : void
+    {
+        // Given
+        $backstagePasses9  = new Item(BackstagePasses::name(), 9, 20);
+        $backstagePasses10  = new Item(BackstagePasses::name(), 10, 20);
+
+        // When
+        (new GildedRose([$backstagePasses9, $backstagePasses10]))->updateQuality();
+
+        // Then
+        $this->assertSame(22, $backstagePasses9->quality);
+        $this->assertSame(22, $backstagePasses10->quality);
+    }
+
+    public function testBackstagePassesIncreaseBy3WhenThereAre5daysOrLess() : void
+    {
+        // Given
+        $backstagePasses4  = new Item(BackstagePasses::name(), 4, 20);
+        $backstagePasses5  = new Item(BackstagePasses::name(), 5, 20);
+
+        // When
+        (new GildedRose([$backstagePasses4, $backstagePasses5]))->updateQuality();
+
+        // Then
+        $this->assertSame(23, $backstagePasses4->quality);
+        $this->assertSame(23, $backstagePasses5->quality);
+    }
+
     public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
     {
         foreach ($this->sellInRange() as $sellIn) {
