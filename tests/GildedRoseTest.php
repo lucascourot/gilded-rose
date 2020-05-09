@@ -11,7 +11,6 @@ use GildedRose\KnownItems\BackstagePasses;
 use GildedRose\KnownItems\Conjured;
 use GildedRose\KnownItems\Sulfuras;
 use PHPUnit\Framework\TestCase;
-use function array_map;
 use function max;
 use function range;
 
@@ -244,47 +243,6 @@ class GildedRoseTest extends TestCase
         $item = new Item('Normal', 5, 10);
 
         $this->assertSame('Normal, 5, 10', (string) $item);
-    }
-
-    public function testGildedRoseAgainstGoldenMaster() : void
-    {
-        // Given
-        $items = $this->generateSampleOfItemsForGoldenMaster();
-
-        $itemsGoldenMaster = array_map(static fn(Item $item) => clone $item, $items);
-
-        // When
-        (new GildedRose($items))->updateQuality();
-        (new GildedRoseGoldenMaster($itemsGoldenMaster))->updateQuality();
-
-        // Then
-        foreach ($items as $key => $item) {
-            $this->assertSame((string) $itemsGoldenMaster[$key], (string) $item);
-        }
-    }
-
-    /**
-     * @return Item[]
-     */
-    private function generateSampleOfItemsForGoldenMaster() : array
-    {
-        $itemNames = [
-            'Standard',
-            AgedBrie::name(),
-            BackstagePasses::name(),
-            Sulfuras::name(),
-        ];
-
-        $items = [];
-        foreach ($itemNames as $itemName) {
-            foreach ($this->sellInRange() as $sellIn) {
-                foreach ($this->qualityRange() as $quality) {
-                    $items[] = new Item($itemName, $sellIn, $quality);
-                }
-            }
-        }
-
-        return $items;
     }
 
     /**
