@@ -250,7 +250,7 @@ class GildedRoseTest extends TestCase
      */
     private function sellInRange() : array
     {
-        return range(-5, 30);
+        return range(-5, 20);
     }
 
     /**
@@ -258,6 +258,6 @@ class GildedRoseTest extends TestCase
      */
     private function qualityRange() : array
     {
-        return range(0, 80);
+        return range(0, 50);
     }
 }
