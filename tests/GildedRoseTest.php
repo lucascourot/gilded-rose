@@ -102,6 +102,19 @@ class GildedRoseTest extends TestCase
         }
     }
 
+    public function testSulfurasNeverHasToBeSoldOrDecreasedInQuality() : void
+    {
+        // Given
+        $sulfurasItem = new Item(Sulfuras::name(), 10, 15);
+
+        // When
+        (new GildedRose([$sulfurasItem]))->updateQuality();
+
+        // Then
+        $this->assertSame(10, $sulfurasItem->sell_in);
+        $this->assertSame(15, $sulfurasItem->quality);
+    }
+
     public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
     {
         foreach ($this->sellInRange() as $sellIn) {
