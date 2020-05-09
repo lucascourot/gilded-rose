@@ -17,6 +17,31 @@ use function range;
 
 class GildedRoseTest extends TestCase
 {
+    public function testAllItemsExceptSulfurasDecreaseTheirSellIn() : void
+    {
+        // Given
+        $itemNames = [
+            'Normal',
+            AgedBrie::name(),
+            BackstagePasses::name(),
+            Conjured::name(),
+        ];
+
+        /** @var Item[] $items */
+        $items = [];
+        foreach ($itemNames as $itemName) {
+            $items[] = new Item($itemName, 5, 10);
+        }
+
+        // When
+        (new GildedRose($items))->updateQuality();
+
+        // Then
+        foreach ($items as $item) {
+            $this->assertSame(4, $item->sell_in);
+        }
+    }
+
     public function testOnceTheSellByDateHasPassedForNormalItemQualityDegradesTwiceAsFast() : void
     {
         // Given
@@ -35,7 +60,6 @@ class GildedRoseTest extends TestCase
     public function testTheQualityOfAnItemIsNeverNegative() : void
     {
         // Given
-        $quality = 0;
         $itemNames = [
             'Normal',
             AgedBrie::name(),
@@ -48,7 +72,9 @@ class GildedRoseTest extends TestCase
         $items = [];
         foreach ($itemNames as $itemName) {
             foreach ($this->sellInRange() as $sellIn) {
-                $items[] = new Item($itemName, $sellIn, $quality);
+                foreach ([0, 1, 2, 3] as $quality) {
+                    $items[] = new Item($itemName, $sellIn, $quality);
+                }
             }
         }
 
@@ -71,6 +97,22 @@ class GildedRoseTest extends TestCase
 
         // Then
         $this->assertSame(11, $agedBrie->quality);
+    }
+
+    public function testAgedBrieIncreasesTwiceFasterIfSellInDateHasPassed() : void
+    {
+        // Given
+        $agedBrie = new Item(AgedBrie::name(), -5, 10);
+        $maxQualityAgedBrie = new Item(AgedBrie::name(), -5, 49);
+        $agedBrieSellIn1 = new Item(AgedBrie::name(), 1, 12);
+
+        // When
+        (new GildedRose([$agedBrie, $maxQualityAgedBrie, $agedBrieSellIn1]))->updateQuality();
+
+        // Then
+        $this->assertSame(12, $agedBrie->quality);
+        $this->assertSame(50, $maxQualityAgedBrie->quality);
+        $this->assertSame(13, $agedBrieSellIn1->quality);
     }
 
     public function testQualityOfItemIsNeverMoreThan50() : void
@@ -98,7 +140,7 @@ class GildedRoseTest extends TestCase
 
         // Then
         foreach ($items as $item) {
-            $this->assertLessThanOrEqual(50, $item->quality);
+            $this->assertLessThanOrEqual($maxQuality, $item->quality);
         }
     }
 
@@ -179,6 +221,13 @@ class GildedRoseTest extends TestCase
                 );
             }
         }
+    }
+
+    public function testItemsCanConvertToString() : void
+    {
+        $item = new Item('Normal', 5, 10);
+
+        $this->assertSame('Normal, 5, 10', (string) $item);
     }
 
     public function testGildedRoseAgainstGoldenMaster() : void
