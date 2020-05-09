@@ -73,6 +73,35 @@ class GildedRoseTest extends TestCase
         $this->assertSame(11, $agedBrie->quality);
     }
 
+    public function testQualityOfItemIsNeverMoreThan50() : void
+    {
+        // Given
+        $maxQuality = 50;
+        $itemNames = [
+            'Normal',
+            AgedBrie::name(),
+            BackstagePasses::name(),
+            Sulfuras::name(),
+            Conjured::name(),
+        ];
+
+        /** @var Item[] $items */
+        $items = [];
+        foreach ($itemNames as $itemName) {
+            foreach ($this->sellInRange() as $sellIn) {
+                $items[] = new Item($itemName, $sellIn, $maxQuality);
+            }
+        }
+
+        // When
+        (new GildedRose($items))->updateQuality();
+
+        // Then
+        foreach ($items as $item) {
+            $this->assertLessThanOrEqual(50, $item->quality);
+        }
+    }
+
     public function testConjuredItemsDegradeInQualityTwiceAsFastAsNormalItemsUntilQualityIs0() : void
     {
         foreach ($this->sellInRange() as $sellIn) {
